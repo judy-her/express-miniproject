@@ -4,32 +4,27 @@ const { readAndAppend, readFromFile } = require('../helpers/fsUtils');
 
 // GET Route for retrieving diagnostic information
 diagnostics.get('/', (req, res) => {
-  // TODO: Logic for sending all the content of db/diagnostics.json
-  console.info(`${req.method} request received for diagnostics`);
+  // TODO: Logic for sending all the content of db/diagnostics.json--status 200 to indicata succesful request
   readFromFile('./db/diagnostics.json').then((data) =>
-    res.json(JSON.parse(data))
+    res.status(200).json(JSON.parse(data))
   );
 });
 
 // POST Route for an error logging
 diagnostics.post('/', (req, res) => {
   // TODO: Logic for appending data to the db/diagnostics.json file
-  console.info(`${req.method} request received to log an error`);
-  console.log(req.body);
-  const { error_id, errors, tip, username } = req.body;
-  if (req.body) {
-    const newError = {
-      error_id,
-      errors,
-      tip,
-      username,
-    };
 
-    readAndAppend(newError, './db/diagnostics.json');
-    res.json(`New Diagnostic added successfully`);
-  } else {
-    res.error('Error in adding diagnosis');
-  }
+  const { tip, topic, username } = req.body;
+
+  const newDiagnosis = {
+    time: Date.now(),
+    error_id: uuidv4(),
+    errors: { tip, topic, username },
+  };
+
+  readAndAppend(newDiagnosis, './db/diagnostics.json');
+
+  res.status(200).json({ msg: 'New Diagnostic logged successfully' });
 });
 
 module.exports = diagnostics;
