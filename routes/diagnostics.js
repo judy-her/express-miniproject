@@ -5,8 +5,8 @@ const { readAndAppend, readFromFile } = require('../helpers/fsUtils');
 // GET Route for retrieving diagnostic information
 diagnostics.get('/', (req, res) => {
   // TODO: Logic for sending all the content of db/diagnostics.json--status 200 to indicata succesful request
-  readFromFile('./db/diagnostics.json').then((data) =>
-    res.status(200).json(JSON.parse(data))
+  readFromFile('./db/diagnostics.json').then((dataJson) =>
+    res.status(200).json(JSON.parse(dataJson))
   );
 });
 
@@ -16,13 +16,17 @@ diagnostics.post('/', (req, res) => {
 
   const { tip, topic, username } = req.body;
 
-  const newDiagnosis = {
+  const newData = {
     time: Date.now(),
     error_id: uuidv4(),
-    errors: { tip, topic, username },
+    errors: {
+      tip,
+      topic,
+      username,
+    },
   };
 
-  readAndAppend(newDiagnosis, './db/diagnostics.json');
+  readAndAppend(newData, './db/diagnostics.json');
 
   res.status(200).json({ msg: 'New Diagnostic logged successfully' });
 });
