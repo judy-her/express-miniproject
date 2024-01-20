@@ -22,7 +22,7 @@ diagnostics.post('/', (req, res) => {
       error_id,
       errors,
       tip,
-      username
+      username,
     };
 
     readAndAppend(newError, './db/diagnostics.json');
@@ -30,15 +30,6 @@ diagnostics.post('/', (req, res) => {
   } else {
     res.error('Error in adding diagnosis');
   }
-
 });
 
 module.exports = diagnostics;
-
-
-
-
-
-
-
-});
